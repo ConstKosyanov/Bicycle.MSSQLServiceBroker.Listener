@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SystemTest": {
+      "commandName": "Project",
+      "commandLineArgs": "-c \"Server=testibzkh;Database=NotificationTest2;Trusted_Connection=True;\" -t TestTable"
+    }
+  }
+}
