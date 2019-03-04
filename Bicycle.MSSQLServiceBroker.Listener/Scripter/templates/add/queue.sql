@@ -1,14 +1,14 @@
-CREATE MESSAGE TYPE [%Table%_ServiceBrokerListenerMessageTypeFor%Operation%]
+CREATE MESSAGE TYPE [%Scheme%_%Table%_ServiceBrokerListenerMessageTypeFor%Operation%]
 VALIDATION = WELL_FORMED_XML
 GO
 --=========================================
-CREATE CONTRACT [%Table%_ServiceBrokerListenerContractFor%Operation%]([%Table%_ServiceBrokerListenerMessageTypeFor%Operation%] SENT BY INITIATOR)
+CREATE CONTRACT [%Scheme%_%Table%_ServiceBrokerListenerContractFor%Operation%]([%Scheme%_%Table%_ServiceBrokerListenerMessageTypeFor%Operation%] SENT BY INITIATOR)
 GO
 --=========================================
-CREATE QUEUE [%Table%_ServiceBrokerListenerQueueFor%Operation%]
+CREATE QUEUE [%Scheme%_%Table%_ServiceBrokerListenerQueueFor%Operation%]
 GO
 --=========================================
-CREATE SERVICE [%Table%_ServiceBrokerListenerServiceFor%Operation%]
-ON QUEUE [%Table%_ServiceBrokerListenerQueueFor%Operation%]([%Table%_ServiceBrokerListenerContractFor%Operation%])
+CREATE SERVICE [%Scheme%_%Table%_ServiceBrokerListenerServiceFor%Operation%]
+ON QUEUE [%Scheme%_%Table%_ServiceBrokerListenerQueueFor%Operation%]([%Scheme%_%Table%_ServiceBrokerListenerContractFor%Operation%])
 GO
 --=========================================

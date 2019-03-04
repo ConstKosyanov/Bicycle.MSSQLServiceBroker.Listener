@@ -1,4 +1,4 @@
-CREATE TRIGGER [%Table%_ServiceBrokerListenerForDelete] ON [%Table%] FOR DELETE
+CREATE TRIGGER [%Scheme%].[%Table%_ServiceBrokerListenerForDelete] ON [%Scheme%].[%Table%] FOR DELETE
 AS
 BEGIN
     BEGIN TRANSACTION;
@@ -6,16 +6,16 @@ BEGIN
     DECLARE @messageBody NVARCHAR(MAX);
 
     BEGIN DIALOG CONVERSATION @ch
-        FROM SERVICE [%Table%_ServiceBrokerListenerServiceNameForDelete]
-        TO SERVICE '%Table%_ServiceBrokerListenerServiceNameForDelete'
-        ON CONTRACT [%Table%_ServiceBrokerListenerContractForDelete]
+        FROM SERVICE [%Scheme%_%Table%_ServiceBrokerListenerServiceNameForDelete]
+        TO SERVICE '%Scheme%_%Table%_ServiceBrokerListenerServiceNameForDelete'
+        ON CONTRACT [%Scheme%_%Table%_ServiceBrokerListenerContractForDelete]
         WITH ENCRYPTION = OFF;
 
     SET @messageBody = (SELECT *
     FROM deleted
     FOR XML RAW, ELEMENTS);
 
-    SEND ON CONVERSATION @ch MESSAGE TYPE [%Table%_ServiceBrokerListenerMessageTypeForDelete] (@messageBody);
+    SEND ON CONVERSATION @ch MESSAGE TYPE [%Scheme%_%Table%_ServiceBrokerListenerMessageTypeForDelete] (@messageBody);
     COMMIT;
 END	
 GO
