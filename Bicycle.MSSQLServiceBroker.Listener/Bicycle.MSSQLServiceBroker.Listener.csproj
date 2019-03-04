@@ -10,7 +10,7 @@ For more infromation see github wiki.</Description>
     <PackageId>Bicycle.MSSQLServiceBroker.Listener</PackageId>
     <Authors>k.kosyanov</Authors>
     <Company>ibzkh</Company>
-    <Version>1.0.0-beta</Version>
+    <Version>1.0.0.1-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>

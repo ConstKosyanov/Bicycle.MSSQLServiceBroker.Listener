@@ -31,6 +31,9 @@ namespace Bicycle.MSSQLServiceBroker.Listener
         /// <param name="connectionString">Connection string to the MS SQL server</param>
         /// <param name="tableName">Table name, what trigger will be listened</param>
         /// <param name="triggerType">What trigger of the Table will be listened</param>
+        public ServiceBrokerListener(string connectionString, string tableName, TriggerType triggerType, EventHandler<ListeningEventArgs<T>> onNext)
+            : this(connectionString, "dbo", tableName, triggerType, onNext) { }
+
         public ServiceBrokerListener(string connectionString, string schemeName, string tableName, TriggerType triggerType, EventHandler<ListeningEventArgs<T>> onNext)
         {
             sqlConnection = new SqlConnection(connectionString);
