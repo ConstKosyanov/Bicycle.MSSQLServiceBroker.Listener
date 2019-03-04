@@ -31,16 +31,16 @@ namespace Bicycle.MSSQLServiceBroker.Listener
         /// <param name="connectionString">Connection string to the MS SQL server</param>
         /// <param name="tableName">Table name, what trigger will be listened</param>
         /// <param name="triggerType">What trigger of the Table will be listened</param>
-        public ServiceBrokerListener(string connectionString, string tableName, TriggerType triggerType, EventHandler<ListeningEventArgs<T>> onNext)
+        public ServiceBrokerListener(string connectionString, string schemeName, string tableName, TriggerType triggerType, EventHandler<ListeningEventArgs<T>> onNext)
         {
             sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
-            sqlCommand = new SqlCommand(GetQueryBody(tableName, triggerType), sqlConnection) { CommandTimeout = 0 };
+            sqlCommand = new SqlCommand(GetQueryBody(schemeName, tableName, triggerType), sqlConnection) { CommandTimeout = 0 };
             tokenSource = new CancellationTokenSource();
             OnNext += onNext;
         }
 
-        private static string GetQueryBody(string tableName, TriggerType triggerType) => $"WAITFOR(RECEIVE message_body FROM [{tableName}_ServiceBrokerListenerQueueFor{triggerType}])";
+        private static string GetQueryBody(string schemeName, string tableName, TriggerType triggerType) => $"WAITFOR(RECEIVE message_body FROM [{schemeName}_{tableName}_ServiceBrokerListenerQueueFor{triggerType}])";
 
         public void StartListening() => Task.Run(() => ListeningAsync(tokenSource.Token), tokenSource.Token);
         public void StopListening() => tokenSource.Cancel();
