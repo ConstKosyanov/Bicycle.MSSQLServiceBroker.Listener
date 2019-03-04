@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 
 using Bicycle.MSSQLServiceBroker.Listener;
+using Bicycle.MSSQLServiceBroker.Listener.ListenerEventArgs;
 
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -66,21 +67,21 @@ namespace SystemTest
             return commandLine.Execute(args);
         }
 
-        private static void OnInsert(object sender, MyEventArgs<MyClass> e)
+        private static void OnInsert(object sender, ListeningEventArgs<MyClass> e)
         {
             foreach(var item in e.Items)
                 data.Add(item.Id, item);
             Print();
         }
 
-        private static void OnUpdate(object sender, MyEventArgs<MyClass> e)
+        private static void OnUpdate(object sender, ListeningEventArgs<MyClass> e)
         {
             foreach(var item in e.Items)
                 data[item.Id] = item;
             Print();
         }
 
-        private static void OnDelete(object sender, MyEventArgs<MyClass> e)
+        private static void OnDelete(object sender, ListeningEventArgs<MyClass> e)
         {
             foreach(var item in e.Items)
                 data.Remove(item.Id);
@@ -94,7 +95,7 @@ namespace SystemTest
                 Console.WriteLine($"{item.Id} - {item.Value}");
         }
 
-        private static ServiceBrokerListener<MyClass> NewServiceBrokerListener(TriggerType triggerType, EventHandler<MyEventArgs<MyClass>> @delegate)
+        private static ServiceBrokerListener<MyClass> NewServiceBrokerListener(TriggerType triggerType, EventHandler<ListeningEventArgs<MyClass>> @delegate)
         {
             var listener = new ServiceBrokerListener<MyClass>(connectionString, tableName, triggerType, @delegate);
             listener.OnExceptoin += (s, e) =>

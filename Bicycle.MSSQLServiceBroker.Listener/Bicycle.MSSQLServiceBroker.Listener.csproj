@@ -1,21 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>This package allows to generate MSSQL Service Broker queues and connect to them.
 For more infromation see github wiki.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ApplicationIcon />
+    <Win32Resource />
+    <PackageId>Bicycle.MSSQLServiceBroker.Listener</PackageId>
+    <Authors>k.kosyanov</Authors>
+    <Company>ibzkh</Company>
+    <Version>1.0.0-beta</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Scripter\createDB.sql" />
-    <None Remove="Scripter\dropDB.sql" />
-    <None Remove="Scripter\run.bat" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Bicycle.FExtensions" Version="1.0.0.24" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="CD &quot;Scripter&quot;&#xD;&#xA;py build.py&#xD;&#xA;CD ..&#xD;&#xA;XCOPY &quot;Scripter\templates&quot; &quot;$(OutDir)\tools\templates&quot; /E /I /Y&#xD;&#xA;CD &quot;Scripter\__pycache__&quot;&#xD;&#xA;REN &quot;generate.*.pyc&quot; &quot;generate.pyc&quot;&#xD;&#xA;CD ..\..&#xD;&#xA;MOVE &quot;Scripter\__pycache__\generate.pyc&quot; &quot;$(OutDir)\tools\generate.pyc&quot;" />
+  </Target>
 
 </Project>

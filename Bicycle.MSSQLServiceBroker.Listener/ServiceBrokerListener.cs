@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using Bicycle.FExtensions;
+using Bicycle.MSSQLServiceBroker.Listener.ListenerEventArgs;
 
 namespace Bicycle.MSSQLServiceBroker.Listener
 {
@@ -23,14 +24,14 @@ namespace Bicycle.MSSQLServiceBroker.Listener
         private readonly SqlConnection sqlConnection;
         private readonly SqlCommand sqlCommand;
         private readonly CancellationTokenSource tokenSource;
-        public event EventHandler<MyEventArgs<T>> OnNext;
+        public event EventHandler<ListeningEventArgs<T>> OnNext;
         public event EventHandler<OnExceptionEventArgs> OnExceptoin;
 
         /// <summary></summary>
         /// <param name="connectionString">Connection string to the MS SQL server</param>
         /// <param name="tableName">Table name, what trigger will be listened</param>
         /// <param name="triggerType">What trigger of the Table will be listened</param>
-        public ServiceBrokerListener(string connectionString, string tableName, TriggerType triggerType, EventHandler<MyEventArgs<T>> onNext)
+        public ServiceBrokerListener(string connectionString, string tableName, TriggerType triggerType, EventHandler<ListeningEventArgs<T>> onNext)
         {
             sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
@@ -53,7 +54,7 @@ namespace Bicycle.MSSQLServiceBroker.Listener
             {
                 var sqlDataReader = await Task.Run(async () => await sqlCommand.ExecuteReaderAsync(), token);
                 var rows = await ReadFromQueueAsync(sqlDataReader);
-                OnNext?.Invoke(this, new MyEventArgs<T>(rows));
+                OnNext?.Invoke(this, new ListeningEventArgs<T>(rows));
             }
         }
 
@@ -100,25 +101,5 @@ namespace Bicycle.MSSQLServiceBroker.Listener
         }
         //=================================================
         #endregion
-    }
-
-    public class OnExceptionEventArgs
-    {
-        public OnExceptionEventArgs(Exception ex) => Exception = ex;
-
-        public Exception Exception { get; set; }
-    }
-
-    public class MyEventArgs<T> : EventArgs where T : new()
-    {
-        internal MyEventArgs(IEnumerable<T> items) => Items = items.ToList();
-        public IEnumerable<T> Items { get; set; }
-    }
-
-    public enum TriggerType
-    {
-        Insert,
-        Update,
-        Delete
     }
 }
