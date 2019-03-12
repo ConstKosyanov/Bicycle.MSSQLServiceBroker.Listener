@@ -69,22 +69,19 @@ namespace SystemTest
 
         private static void OnInsert(object sender, ListeningEventArgs<MyClass> e)
         {
-            foreach(var item in e.Items)
-                data.Add(item.Id, item);
+            data.Add(e.Item.Id, e.Item);
             Print();
         }
 
         private static void OnUpdate(object sender, ListeningEventArgs<MyClass> e)
         {
-            foreach(var item in e.Items)
-                data[item.Id] = item;
+            data[e.Item.Id] = e.Item;
             Print();
         }
 
         private static void OnDelete(object sender, ListeningEventArgs<MyClass> e)
         {
-            foreach(var item in e.Items)
-                data.Remove(item.Id);
+            data.Remove(e.Item.Id);
             Print();
         }
 

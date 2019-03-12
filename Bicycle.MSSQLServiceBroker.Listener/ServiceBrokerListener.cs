@@ -56,8 +56,8 @@ namespace Bicycle.MSSQLServiceBroker.Listener
             while(listening)
             {
                 var sqlDataReader = await Task.Run(async () => await sqlCommand.ExecuteReaderAsync(), token);
-                var rows = await ReadFromQueueAsync(sqlDataReader);
-                OnNext?.Invoke(this, new ListeningEventArgs<T>(rows));
+                foreach(var item in await ReadFromQueueAsync(sqlDataReader))
+                    OnNext?.Invoke(this, new ListeningEventArgs<T>(item));
             }
         }
 
